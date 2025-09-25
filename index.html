@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拼好图 Pro - 多组图片批量合成工具</title>
+    <title>拼好图 Pro v2.0 - 多组批量合成</title>
     <style>
         :root {
-            --bg-color: #1a202c;
-            --card-bg-color: #2d3748;
-            --text-color: #e2e8f0;
-            --text-muted-color: #a0aec0;
-            --primary-color: #66a6ff;
-            --primary-hover-color: #89f7fe;
-            --danger-color: #f56565;
-            --border-color: #4a5568;
-            --success-color: #48bb78;
+            --bg-color: #f0f4f8;
+            --card-bg-color: #ffffff;
+            --text-color: #1a202c;
+            --text-muted-color: #718096;
+            --primary-color: #7b68ee;
+            --primary-hover-color: #9370db;
+            --danger-color: #ef4444;
+            --border-color: #e2e8f0;
+            --success-color: #34d399;
+            --font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: var(--font-family);
             margin: 0;
             padding: 2rem;
             line-height: 1.6;
@@ -43,15 +44,22 @@
         header h1 {
             font-size: 2.5rem;
             margin: 0;
+            color: var(--primary-color);
+            font-weight: 700;
         }
 
         .card {
             background-color: var(--card-bg-color);
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+
+        .card:hover {
+             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.04);
         }
         
         .card-header {
@@ -69,6 +77,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            color: #4a5568;
         }
         
         .btn {
@@ -81,42 +90,48 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s ease-in-out;
+            font-size: 1rem;
         }
         
         .btn-primary {
             background-color: var(--primary-color);
-            color: var(--bg-color);
+            color: white;
+            box-shadow: 0 2px 5px rgba(123, 104, 238, 0.3);
         }
 
         .btn-primary:hover {
             background-color: var(--primary-hover-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(102, 166, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(123, 104, 238, 0.4);
+        }
+        
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
         }
 
         .btn-danger {
             background: none;
             color: var(--danger-color);
-            border: 1px solid var(--danger-color);
         }
         .btn-danger:hover {
-            background: var(--danger-color);
-            color: var(--text-color);
+            background: rgba(239, 68, 68, 0.1);
         }
         
         .btn-secondary {
-            background: none;
+            background: #f7fafc;
             border: 1px solid var(--border-color);
-            color: var(--text-color);
+            color: #4a5568;
         }
         .btn-secondary:hover {
-            background: var(--border-color);
+            background: #e2e8f0;
         }
 
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
+            align-items: center;
         }
 
         .control-group {
@@ -130,11 +145,25 @@
             color: var(--text-muted-color);
         }
 
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        .radio-group input:checked + label {
+            background-color: rgba(123, 104, 238, 0.1);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
             height: 8px;
-            background: #4a5568;
+            background: #e2e8f0;
             border-radius: 5px;
             outline: none;
         }
@@ -147,157 +176,69 @@
             background: var(--primary-color);
             cursor: pointer;
             border-radius: 50%;
-            border: 3px solid var(--card-bg-color);
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        input[type="checkbox"].toggle {
-            height: 0;
-            width: 0;
-            visibility: hidden;
-        }
-
+        input[type="checkbox"].toggle { height: 0; width: 0; visibility: hidden; }
         input[type="checkbox"].toggle + label {
-            cursor: pointer;
-            text-indent: -9999px;
-            width: 50px;
-            height: 28px;
-            background: var(--border-color);
-            display: block;
-            border-radius: 100px;
-            position: relative;
+            cursor: pointer; text-indent: -9999px; width: 50px; height: 28px; background: #cbd5e0;
+            display: block; border-radius: 100px; position: relative;
         }
-
         input[type="checkbox"].toggle + label:after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 24px;
-            height: 24px;
-            background: #fff;
-            border-radius: 24px;
-            transition: 0.2s;
+            content: ''; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px;
+            background: #fff; border-radius: 24px; transition: 0.2s;
         }
-
-        input[type="checkbox"].toggle:checked + label {
-            background: var(--primary-color);
-        }
-
-        input[type="checkbox"].toggle:checked + label:after {
-            left: calc(100% - 2px);
-            transform: translateX(-100%);
-        }
+        input[type="checkbox"].toggle:checked + label { background: var(--primary-color); }
+        input[type="checkbox"].toggle:checked + label:after { left: calc(100% - 2px); transform: translateX(-100%); }
 
         .file-drop-area {
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
+            border: 2px dashed var(--border-color); border-radius: 12px; padding: 2rem;
+            text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; color: var(--text-muted-color);
         }
-        .file-drop-area.dragover {
-            border-color: var(--primary-color);
-            background-color: rgba(102, 166, 255, 0.1);
-        }
+        .file-drop-area.dragover { border-color: var(--primary-color); background-color: rgba(123, 104, 238, 0.05); }
         
-        .image-previews {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
+        .image-previews { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+        .preview-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
         
-        .preview-item {
-            position: relative;
-        }
+        .output-canvas { display: none; max-width: 100%; border-radius: 8px; margin-top: 1rem; border: 1px solid var(--border-color); }
+        .output-canvas.visible { display: block; }
 
-        .preview-item img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .output-canvas {
-            display: block;
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border: 1px solid var(--border-color);
-        }
-        
         .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            background-color: var(--border-color);
-            color: var(--text-color);
+            padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: bold;
+            background-color: #e2e8f0; color: #4a5568;
         }
-        
-        .status-badge.success { background-color: var(--success-color); }
-        .status-badge.processing { background-color: var(--primary-color); color: var(--bg-color); }
-
-        .hidden {
-            display: none;
-        }
-
-        .icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        .logo-icon {
-            width: 64px;
-            height: 64px;
-        }
-
-        .flex-center {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .status-badge.success { background-color: var(--success-color); color: white; }
+        .status-badge.processing { background-color: var(--primary-color); color: white; }
+        .hidden { display: none !important; } .icon { width: 24px; height: 24px; }
+        .logo-icon { width: 64px; height: 64px; }
+        .flex-center { display: flex; align-items: center; gap: 0.5rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <svg class="logo-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#89f7fe;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#66a6ff;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Z" fill="#2d3748"/>
-                <path d="M176 48h-32v16h-16V48H96v32H80v16H96v16h32v-16h16v16h16V80h16V64h-16z" fill="url(#grad1)" opacity="0.8"/>
-                <circle cx="100" cy="132" r="16" fill="#fff"/>
-                <path d="M92 132a8 8 0 0 0 8 8Z" fill="#2d3748"/>
-                <path d="M100 124a8 8 0 0 0 8 8v-8Z" fill="#66a6ff"/>
-                <circle cx="156" cy="132" r="16" fill="#fff"/>
-                <path d="M148 132a8 8 0 0 0 8 8Z" fill="#2d3748"/>
-                <path d="M156 124a8 8 0 0 0 8 8v-8Z" fill="#66a6ff"/>
-                <path d="M104 172c0 13.25-10.75 24 24 24s24-10.75 24-24c-8 0-16-4-24-4s-16 4-24 4z" fill="#f89b29"/>
-            </svg>
+            <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0, -2)"><path d="M50 90 C 25 90, 20 70, 20 55 C 20 30, 30 10, 50 10 C 70 10, 80 30, 80 55 C 80 70, 75 90, 50 90 Z" fill="#ffecb3"/><path d="M35 15 Q 50 5, 65 15 Q 85 20, 80 55 Q 78 70, 50 75 Q 22 70, 20 55 Q 15 20, 35 15 Z" fill="#8d6e63"/><circle cx="38" cy="48" r="7" fill="#4e342e"/><circle cx="39" cy="47" r="2.5" fill="white"/><circle cx="62" cy="48" r="7" fill="#4e342e"/><circle cx="63" cy="47" r="2.5" fill="white"/><path d="M45 60 Q 50 65, 55 60" stroke="#c62828" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M50 78 C 40 78, 40 70, 40 70 L 60 70 C 60 70, 60 78, 50 78" fill="#ff8a65"/><path d="M42,75 a1.5,1.5 0 0,1 3,0 a1.5,1.5 0 0,1 -3,0" fill="#ff5252"/><path d="M58,75 a1.5,1.5 0 0,0 -3,0 a1.5,1.5 0 0,0 3,0" fill="#ff5252"/><path d="M60 78 C 55 85, 45 85, 40 78" stroke="#8d6e63" stroke-width="1" fill="none"/><path d="M50 75 L 50 78" stroke="#c62828" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M58,35 C 50,25, 42,25, 35,35" stroke="#8d6e63" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
             <h1>拼好图 Pro</h1>
         </header>
 
         <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path><path d="M12 2v2"></path><path d="M12 22v-2"></path><path d="m17 7 1.4-1.4"></path><path d="m6 18 1.4-1.4"></path><path d="M7 7l-1.4-1.4"></path><path d="m18 18-1.4-1.4"></path><path d="M2 12h2"></path><path d="M22 12h-2"></path></svg>
-                    全局设置
-                </h2>
-            </div>
+            <div class="card-header"><h2 class="card-title">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/><path d="m12 10.5 0.5-1 1 0.5-1-0.5-0.5-1-0.5 1-1-0.5 1 0.5Z" fill="currentColor"/></svg>
+                全局设置
+            </h2></div>
             <div class="control-grid">
                 <div class="control-group">
-                    <label for="global-threshold">背景剔除阈值: <span id="global-threshold-value">240</span></label>
+                    <label>背景颜色 (设为透明)</label>
+                    <div class="flex-center radio-group" style="gap:1rem;">
+                        <input type="radio" id="global-bg-white" name="global-bg" value="white" checked hidden>
+                        <label for="global-bg-white">白色</label>
+                        <input type="radio" id="global-bg-black" name="global-bg" value="black" hidden>
+                        <label for="global-bg-black">黑色</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label id="global-threshold-label" for="global-threshold">白色判定阈值: <span id="global-threshold-value">240</span></label>
                     <input type="range" id="global-threshold" min="0" max="255" value="240">
                 </div>
                 <div class="control-group">
@@ -317,15 +258,12 @@
                 <div class="card-header">
                     <h3 class="card-title group-title">图片组</h3>
                      <button class="btn btn-danger btn-sm remove-group-btn">
-                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                         移除
+                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                         删除
                      </button>
                 </div>
                 
-                <div class="file-drop-area">
-                    点击或拖拽图片到这里
-                    <input type="file" class="file-input" multiple accept="image/*" style="display: none;">
-                </div>
+                <div class="file-drop-area">点击或拖拽图片到这里<input type="file" class="file-input" multiple accept="image/*" hidden></div>
                 <div class="image-previews"></div>
 
                 <div class="card-header" style="margin-top: 1.5rem; margin-bottom: 0;">
@@ -339,7 +277,16 @@
                 <div class="local-settings-container hidden">
                     <div class="control-grid">
                         <div class="control-group">
-                            <label class="local-threshold-label">局部阈值: <span>240</span></label>
+                             <label>背景颜色 (设为透明)</label>
+                             <div class="flex-center radio-group" style="gap:1rem;">
+                                 <input type="radio" class="local-bg-white" name="local-bg-template" value="white" checked hidden>
+                                 <label class="local-bg-white-label">白色</label>
+                                 <input type="radio" class="local-bg-black" name="local-bg-template" value="black" hidden>
+                                 <label class="local-bg-black-label">黑色</label>
+                             </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="local-threshold-label">白色判定阈值: <span>240</span></label>
                             <input type="range" class="local-threshold" min="0" max="255" value="240">
                         </div>
                         <div class="control-group">
@@ -362,20 +309,11 @@
         
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
             <button class="btn btn-secondary" id="add-group-btn">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><path d="M12 10v6" stroke-width="2.5"/><path d="M15 13h-6" stroke-width="2.5"/><path d="M8 5l-1-1" stroke-width="1.5"/><path d="M17 9l1-1" stroke-width="1.5"/></svg>
                 添加图片组
             </button>
             <button class="btn btn-primary" id="process-all-btn">
-                <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <defs>
-                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M12 2L8 10l-8-2 8 2-2 8 2-8 2 8-2-8 8 2-8-2 2-8z" fill="url(#grad2)" stroke="none"/>
-                    <line x1="12" y1="22" x2="12" y2="10"></line>
-                </svg>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 2.5a2.5 2.5 0 0 1 3.5 3.5L7 15l-4 5 5-4Z"/><path d="m13.5 6.5 4 4"/><path d="M5 2l2 2"/><path d="M22 5l-2 2"/><path d="M22 19l-2-2"/></svg>
                 一键处理所有组
             </button>
         </div>
@@ -388,7 +326,9 @@
 
             const globalThresholdSlider = document.getElementById('global-threshold');
             const globalThresholdValue = document.getElementById('global-threshold-value');
+            const globalThresholdLabel = document.getElementById('global-threshold-label');
             const globalNegativeCheckbox = document.getElementById('global-negative');
+            const globalBgRadios = document.querySelectorAll('input[name="global-bg"]');
             const addGroupBtn = document.getElementById('add-group-btn');
             const processAllBtn = document.getElementById('process-all-btn');
             const groupsContainer = document.getElementById('groups-container');
@@ -399,15 +339,19 @@
                 globalThresholdValue.textContent = globalThresholdSlider.value;
             });
 
+            globalBgRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    const labelText = radio.value === 'white' ? '白色判定阈值' : '黑色判定阈值';
+                    globalThresholdLabel.firstChild.textContent = `${labelText}: `;
+                });
+            });
+
             // --- Group Management ---
             function addGroup() {
                 const groupId = nextGroupId++;
                 const newGroup = {
-                    id: groupId,
-                    files: [],
-                    useLocalSettings: false,
-                    threshold: 240,
-                    negative: false,
+                    id: groupId, files: [], useLocalSettings: false,
+                    backgroundColor: 'white', threshold: 240, negative: false,
                 };
                 imageGroups.push(newGroup);
 
@@ -418,23 +362,44 @@
                 groupCard.querySelector('.group-title').textContent = `图片组 ${groupId + 1}`;
                 groupCard.querySelector('.use-local-settings').id = `use-local-settings-${groupId}`;
                 groupCard.querySelector('.toggle-label').htmlFor = `use-local-settings-${groupId}`;
-                groupCard.querySelector('.local-threshold').addEventListener('input', (e) => updateLocalSetting(groupId, 'threshold', e.target.value, e.target));
-                groupCard.querySelector('.local-negative').id = `local-negative-${groupId}`;
+
+                // Setup local settings
+                const localThreshold = groupCard.querySelector('.local-threshold');
+                localThreshold.addEventListener('input', (e) => updateLocalSetting(groupId, 'threshold', e.target.value, e.target));
+
+                const localNegative = groupCard.querySelector('.local-negative');
+                localNegative.id = `local-negative-${groupId}`;
                 groupCard.querySelector('.local-negative-label').htmlFor = `local-negative-${groupId}`;
-                groupCard.querySelector('.local-negative').addEventListener('change', (e) => updateLocalSetting(groupId, 'negative', e.target.checked));
+                localNegative.addEventListener('change', (e) => updateLocalSetting(groupId, 'negative', e.target.checked));
+                
+                const localBgWhite = groupCard.querySelector('.local-bg-white');
+                const localBgBlack = groupCard.querySelector('.local-bg-black');
+                const localBgWhiteLabel = groupCard.querySelector('.local-bg-white-label');
+                const localBgBlackLabel = groupCard.querySelector('.local-bg-black-label');
+                const localThresholdLabel = groupCard.querySelector('.local-threshold-label');
+
+                localBgWhite.name = `local-bg-${groupId}`;
+                localBgBlack.name = `local-bg-${groupId}`;
+                localBgWhite.id = `local-bg-white-${groupId}`;
+                localBgBlack.id = `local-bg-black-${groupId}`;
+                localBgWhiteLabel.htmlFor = `local-bg-white-${groupId}`;
+                localBgBlackLabel.htmlFor = `local-bg-black-${groupId}`;
+
+                [localBgWhite, localBgBlack].forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        updateLocalSetting(groupId, 'backgroundColor', e.target.value);
+                        const labelText = e.target.value === 'white' ? '白色判定阈值' : '黑色判定阈值';
+                        localThresholdLabel.firstChild.textContent = `${labelText}: `;
+                    });
+                });
                 
                 groupsContainer.appendChild(templateContent);
-
-                const newCardElement = groupsContainer.querySelector(`[data-id='${groupId}']`);
-                setupGroupEventListeners(newCardElement, groupId);
+                setupGroupEventListeners(groupsContainer.querySelector(`[data-id='${groupId}']`), groupId);
             }
 
             function removeGroup(groupId) {
                 imageGroups = imageGroups.filter(g => g.id !== groupId);
-                const cardToRemove = groupsContainer.querySelector(`[data-id='${groupId}']`);
-                if (cardToRemove) {
-                    cardToRemove.remove();
-                }
+                groupsContainer.querySelector(`[data-id='${groupId}']`)?.remove();
             }
 
             function updateLocalSetting(groupId, key, value, element) {
@@ -450,53 +415,33 @@
             function setupGroupEventListeners(card, groupId) {
                 const fileDropArea = card.querySelector('.file-drop-area');
                 const fileInput = card.querySelector('.file-input');
-
                 fileDropArea.addEventListener('click', () => fileInput.click());
-                fileDropArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    fileDropArea.classList.add('dragover');
+                ['dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    fileDropArea.addEventListener(eventName, e => e.preventDefault());
                 });
+                fileDropArea.addEventListener('dragover', () => fileDropArea.classList.add('dragover'));
                 fileDropArea.addEventListener('dragleave', () => fileDropArea.classList.remove('dragover'));
                 fileDropArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
                     fileDropArea.classList.remove('dragover');
-                    const files = e.dataTransfer.files;
-                    if (files.length) {
-                        handleFileSelect(groupId, files);
-                    }
+                    handleFileSelect(groupId, e.dataTransfer.files);
                 });
-                fileInput.addEventListener('change', (e) => {
-                    if (e.target.files.length) {
-                        handleFileSelect(groupId, e.target.files);
-                    }
-                });
-
+                fileInput.addEventListener('change', (e) => handleFileSelect(groupId, e.target.files));
                 card.querySelector('.remove-group-btn').addEventListener('click', () => removeGroup(groupId));
                 card.querySelector('.use-local-settings').addEventListener('change', (e) => {
-                    const group = imageGroups.find(g => g.id === groupId);
-                    if (group) {
-                        group.useLocalSettings = e.target.checked;
-                        card.querySelector('.local-settings-container').classList.toggle('hidden', !e.target.checked);
-                    }
+                    imageGroups.find(g => g.id === groupId).useLocalSettings = e.target.checked;
+                    card.querySelector('.local-settings-container').classList.toggle('hidden', !e.target.checked);
                 });
             }
 
             function handleFileSelect(groupId, files) {
                 const group = imageGroups.find(g => g.id === groupId);
-                if (!group) return;
-                
+                if (!group || !files.length) return;
                 group.files = Array.from(files);
                 const previewsContainer = groupsContainer.querySelector(`[data-id='${groupId}'] .image-previews`);
                 previewsContainer.innerHTML = '';
                 group.files.forEach(file => {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        previewsContainer.innerHTML += `
-                            <div class="preview-item">
-                                <img src="${e.target.result}" alt="${file.name}">
-                            </div>
-                        `;
-                    }
+                    reader.onload = (e) => previewsContainer.innerHTML += `<div class="preview-item"><img src="${e.target.result}" alt="${file.name}"></div>`;
                     reader.readAsDataURL(file);
                 });
             }
@@ -504,20 +449,17 @@
             // --- Main Processing Logic ---
             async function processAllGroups() {
                 processAllBtn.disabled = true;
-                processAllBtn.textContent = '处理中...';
+                processAllBtn.innerHTML = '处理中...';
 
                 for (const group of imageGroups) {
                     const card = groupsContainer.querySelector(`[data-id='${group.id}']`);
                     const statusBadge = card.querySelector('.status-badge');
-                    
                     if (group.files.length === 0) {
                         statusBadge.textContent = '无图片';
                         continue;
                     }
-
                     statusBadge.textContent = '处理中...';
                     statusBadge.classList.add('processing');
-
                     try {
                         await processGroup(group);
                         statusBadge.textContent = '处理完成';
@@ -532,40 +474,30 @@
                 }
                 
                 processAllBtn.disabled = false;
-                processAllBtn.innerHTML = `
-                    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" /><stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" /></linearGradient></defs>
-                        <path d="M12 2L8 10l-8-2 8 2-2 8 2-8 2 8-2-8 8 2-8-2 2-8z" fill="url(#grad2)" stroke="none"/><line x1="12" y1="22" x2="12" y2="10"></line>
-                    </svg>
-                    一键处理所有组
-                `;
+                processAllBtn.innerHTML = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 2.5a2.5 2.5 0 0 1 3.5 3.5L7 15l-4 5 5-4Z"/><path d="m13.5 6.5 4 4"/><path d="M5 2l2 2"/><path d="M22 5l-2 2"/><path d="M22 19l-2-2"/></svg>一键处理所有组`;
             }
 
             async function processGroup(group) {
+                const globalBgValue = document.querySelector('input[name="global-bg"]:checked').value;
                 const settings = {
-                    threshold: group.useLocalSettings ? parseInt(group.threshold) : parseInt(globalThresholdSlider.value),
+                    backgroundColor: group.useLocalSettings ? group.backgroundColor : globalBgValue,
+                    threshold: parseInt(group.useLocalSettings ? group.threshold : globalThresholdSlider.value),
                     negative: group.useLocalSettings ? group.negative : globalNegativeCheckbox.checked,
                 };
                 
-                const card = groupsContainer.querySelector(`[data-id='${group.id}']`);
-                const outputCanvas = card.querySelector('.output-canvas');
+                const outputCanvas = groupsContainer.querySelector(`[data-id='${group.id}'] .output-canvas`);
                 const ctx = outputCanvas.getContext('2d');
-
                 const imageBitmaps = await Promise.all(group.files.map(file => createImageBitmap(file)));
-
                 if (imageBitmaps.length === 0) return;
 
                 const maxWidth = Math.max(...imageBitmaps.map(b => b.width));
                 const maxHeight = Math.max(...imageBitmaps.map(b => b.height));
-
                 outputCanvas.width = maxWidth;
                 outputCanvas.height = maxHeight;
-                ctx.clearRect(0, 0, maxWidth, maxHeight);
-
-                // Create a single offscreen canvas for processing
+                outputCanvas.classList.add('visible');
+                
                 const offscreenCanvas = new OffscreenCanvas(maxWidth, maxHeight);
                 const offscreenCtx = offscreenCanvas.getContext('2d');
-                
                 let compositeImageData = ctx.createImageData(maxWidth, maxHeight);
 
                 for (const bitmap of imageBitmaps) {
@@ -575,29 +507,32 @@
                     const pixels = imageData.data;
 
                     for (let i = 0; i < pixels.length; i += 4) {
-                        const r = pixels[i];
-                        const g = pixels[i + 1];
-                        const b = pixels[i + 2];
+                        if (compositeImageData.data[i + 3] !== 0) continue; // Skip if pixel is already drawn
                         
-                        // If pixel is not transparent background, merge it.
-                        if (r < settings.threshold || g < settings.threshold || b < settings.threshold) {
-                             // Only write pixel if destination is transparent
-                            if (compositeImageData.data[i + 3] === 0) {
-                                if(settings.negative) {
-                                    compositeImageData.data[i] = 255 - r;
-                                    compositeImageData.data[i + 1] = 255 - g;
-                                    compositeImageData.data[i + 2] = 255 - b;
-                                } else {
-                                    compositeImageData.data[i] = r;
-                                    compositeImageData.data[i + 1] = g;
-                                    compositeImageData.data[i + 2] = b;
-                                }
-                                compositeImageData.data[i + 3] = 255;
+                        const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2], a = pixels[i + 3];
+                        if (a === 0) continue; // Skip transparent pixels from source
+                        
+                        let isBackground = false;
+                        if (settings.backgroundColor === 'white') {
+                            isBackground = r >= settings.threshold && g >= settings.threshold && b >= settings.threshold;
+                        } else { // black
+                            isBackground = r <= settings.threshold && g <= settings.threshold && b <= settings.threshold;
+                        }
+                        
+                        if (!isBackground) {
+                            if (settings.negative) {
+                                compositeImageData.data[i] = 255 - r;
+                                compositeImageData.data[i + 1] = 255 - g;
+                                compositeImageData.data[i + 2] = 255 - b;
+                            } else {
+                                compositeImageData.data[i] = r;
+                                compositeImageData.data[i + 1] = g;
+                                compositeImageData.data[i + 2] = b;
                             }
+                            compositeImageData.data[i + 3] = 255;
                         }
                     }
                 }
-                
                 ctx.putImageData(compositeImageData, 0, 0);
             }
             
