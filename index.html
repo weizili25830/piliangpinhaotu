@@ -3,1064 +3,609 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拼好图</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <title>拼好图 Pro - 多组图片批量合成工具</title>
     <style>
         :root {
-            --primary: #FF70A6;
-            --primary-dark: #FF4D94;
-            --secondary: #70D6FF;
-            --accent: #FFD670;
-            --success: #70FF9A;
-            --background: #FAF9F9;
-            --card: #FFFFFF;
-            --text: #3D3B8E;
-            --text-light: #8884C4;
-            --border: #E4E1F1;
-            --shadow: 0 4px 20px rgba(125, 100, 255, 0.15);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --bg-color: #1a202c;
+            --card-bg-color: #2d3748;
+            --text-color: #e2e8f0;
+            --text-muted-color: #a0aec0;
+            --primary-color: #66a6ff;
+            --primary-hover-color: #89f7fe;
+            --danger-color: #f56565;
+            --border-color: #4a5568;
+            --success-color: #48bb78;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #F0F3FF 0%, #E6F0FF 100%);
-            color: var(--text);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
             line-height: 1.6;
-            min-height: 100vh;
-            padding: 1rem;
         }
-        
+
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1rem;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            max-width: 600px;
             margin: 0 auto;
         }
-        
-        .card {
-            background-color: var(--card);
-            border-radius: 24px;
-            border: 3px solid var(--border);
-            box-shadow: var(--shadow);
-            padding: 2rem;
+
+        header {
+            text-align: center;
             margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
         }
         
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.1);
         }
         
-        .card-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1rem;
-            color: var(--text);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
         
-        .card-content {
-            padding: 1rem 0;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            background: rgba(227, 223, 255, 0.5);
-            border-radius: 16px;
-            padding: 0.5rem;
-            border: 2px solid var(--border);
-            width: fit-content;
-        }
-        
-        .tab {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: transparent;
-            border: none;
-            color: var(--text-light);
-        }
-        
-        .tab.active {
-            background: var(--card);
-            color: var(--text);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .global-controls {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #F8F7FF 0%, #F0EDFF 100%);
-            border-radius: 16px;
-            border: 2px dashed var(--border);
-        }
-        
-        .control-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text);
-            display: flex;
+        .btn {
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-        }
-        
-        .control-group {
-            margin-bottom: 1.5rem;
-            padding: 1.25rem;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 12px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
             font-weight: 600;
-            color: var(--text);
+            transition: all 0.2s ease-in-out;
         }
         
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(102, 166, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: none;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .btn-danger:hover {
+            background: var(--danger-color);
+            color: var(--text-color);
+        }
+        
+        .btn-secondary {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .control-group label {
+            font-weight: 500;
+            color: var(--text-muted-color);
+        }
+
         input[type="range"] {
-            width: 100%;
-            margin: 0.5rem 0;
             -webkit-appearance: none;
-            height: 12px;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            width: 100%;
+            height: 8px;
+            background: #4a5568;
+            border-radius: 5px;
             outline: none;
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg-color);
+        }
+
+        input[type="checkbox"].toggle {
+            height: 0;
+            width: 0;
+            visibility: hidden;
+        }
+
+        input[type="checkbox"].toggle + label {
+            cursor: pointer;
+            text-indent: -9999px;
+            width: 50px;
+            height: 28px;
+            background: var(--border-color);
+            display: block;
+            border-radius: 100px;
+            position: relative;
+        }
+
+        input[type="checkbox"].toggle + label:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
             width: 24px;
             height: 24px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            border: 2px solid white;
+            background: #fff;
+            border-radius: 24px;
+            transition: 0.2s;
         }
-        
-        .range-value {
-            display: inline-block;
-            width: 3rem;
-            text-align: center;
-            font-weight: 700;
-            color: var(--primary);
-            background: rgba(255, 112, 166, 0.1);
-            padding: 0.25rem 0.5rem;
+
+        input[type="checkbox"].toggle:checked + label {
+            background: var(--primary-color);
+        }
+
+        input[type="checkbox"].toggle:checked + label:after {
+            left: calc(100% - 2px);
+            transform: translateX(-100%);
+        }
+
+        .file-drop-area {
+            border: 2px dashed var(--border-color);
             border-radius: 8px;
-        }
-        
-        .group-container {
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            background: var(--card);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-        }
-        
-        .group-container:hover {
-            transform: translateY(-5px);
-        }
-        
-        .group-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .group-title {
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .remove-group {
-            background: rgba(255, 77, 148, 0.1);
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 1.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .remove-group:hover {
-            background: var(--primary);
-            color: white;
-            transform: rotate(90deg);
-        }
-        
-        .image-preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin: 1rem 0;
-        }
-        
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .image-preview:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .upload-area {
-            border: 3px dashed var(--secondary);
-            border-radius: 16px;
             padding: 2rem;
             text-align: center;
             cursor: pointer;
-            margin: 1rem 0;
-            transition: all 0.3s ease;
-            background: rgba(112, 214, 255, 0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        .file-drop-area.dragover {
+            border-color: var(--primary-color);
+            background-color: rgba(102, 166, 255, 0.1);
         }
         
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(255, 112, 166, 0.05);
-        }
-        
-        .upload-area p {
-            color: var(--text-light);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(255, 112, 166, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255, 112, 166, 0.4);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn-process {
-            display: block;
-            width: 100%;
-            padding: 1.25rem;
-            font-size: 1.2rem;
-            margin: 2rem 0;
-            justify-content: center;
-        }
-        
-        .results-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .result-card {
-            background: var(--card);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 2px solid var(--border);
-            transition: all 0.3s ease;
-        }
-        
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-        
-        .result-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-            background: linear-gradient(135deg, #F0F3FF 0%, #E6F0FF 100%);
+        .image-previews {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-light);
-            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
         }
         
-        .result-info {
-            padding: 1.5rem;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0.75rem 0;
-        }
-        
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary);
-        }
-        
-        input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            margin-right: 0.25rem;
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            padding: 1rem;
-        }
-        
-        .icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transform: translateX(100%);
-            opacity: 0;
-            transition: all 0.5s ease;
-            z-index: 1000;
-            border-left: 4px solid var(--success);
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 768px) {
-            .results-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-            
-            .group-container {
-                padding: 1.25rem;
-            }
+        .preview-item {
+            position: relative;
         }
 
-        /* 动画效果 */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        .preview-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
         
-        .floating {
-            animation: float 5s ease-in-out infinite;
+        .output-canvas {
+            display: block;
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
         }
         
-        /* 装饰元素 */
-        .decoration {
-            position: absolute;
-            z-index: -1;
-            opacity: 0.1;
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background-color: var(--border-color);
+            color: var(--text-color);
         }
         
-        .decoration-1 {
-            top: -30px;
-            right: -30px;
-            width: 150px;
-            height: 150px;
-            background: var(--primary);
-            border-radius: 50%;
-            filter: blur(10px);
+        .status-badge.success { background-color: var(--success-color); }
+        .status-badge.processing { background-color: var(--primary-color); color: var(--bg-color); }
+
+        .hidden {
+            display: none;
         }
-        
-        .decoration-2 {
-            bottom: -40px;
-            left: -40px;
-            width: 120px;
-            height: 120px;
-            background: var(--secondary);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            filter: blur(12px);
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" fill="#FF70A6" />
-                <circle cx="35" cy="40" r="5" fill="white" />
-                <circle cx="65" cy="40" r="5" fill="white" />
-                <path d="M 30 65 Q 50 75 70 65" stroke="white" stroke-width="3" fill="none" />
-                <path d="M 25 25 L 45 15 L 55 30 L 75 20" stroke="#70D6FF" stroke-width="4" fill="none" />
-                <path d="M 30 30 L 15 45 L 30 55 L 20 75" stroke="#FFD670" stroke-width="4" fill="none" />
+        <header>
+            <svg class="logo-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#89f7fe;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#66a6ff;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Z" fill="#2d3748"/>
+                <path d="M176 48h-32v16h-16V48H96v32H80v16H96v16h32v-16h16v16h16V80h16V64h-16z" fill="url(#grad1)" opacity="0.8"/>
+                <circle cx="100" cy="132" r="16" fill="#fff"/>
+                <path d="M92 132a8 8 0 0 0 8 8Z" fill="#2d3748"/>
+                <path d="M100 124a8 8 0 0 0 8 8v-8Z" fill="#66a6ff"/>
+                <circle cx="156" cy="132" r="16" fill="#fff"/>
+                <path d="M148 132a8 8 0 0 0 8 8Z" fill="#2d3748"/>
+                <path d="M156 124a8 8 0 0 0 8 8v-8Z" fill="#66a6ff"/>
+                <path d="M104 172c0 13.25-10.75 24 24 24s24-10.75 24-24c-8 0-16-4-24-4s-16 4-24 4z" fill="#f89b29"/>
             </svg>
-            <h1>拼好图 - 二次元拼图小工具</h1>
-            <p class="subtitle">将图片智能分片、恢复，体验拼图乐趣，永久免费</p>
-        </div>
-        
-        <div class="card">
-            <div class="decoration decoration-1"></div>
-            <div class="decoration decoration-2"></div>
-            
-            <div class="tabs">
-                <button class="tab active">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 5.5V7H9V5.5L3 7V9L10 11V13H9V15H10V21H12V15H14V21H16V15H17V13H16V11L21 9Z"/>
-                    </svg>
-                    拼图合成
-                </button>
-                <button class="tab">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                    </svg>
-                    生成分片
-                </button>
-            </div>
-            
-            <div class="card-content">
-                <div class="global-controls">
-                    <div class="control-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
-                        </svg>
-                        全局控制
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>统一阈值设置: <span id="global-threshold-value" class="range-value">240</span></label>
-                        <input type="range" id="global-threshold" min="0" max="255" value="240">
-                        <button id="apply-global-threshold" class="btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17,5V11H19V5H17M15,17H13V7H15V17M11,13H9V11H11V13M7,17H5V13H7V17M21,3H3A2,2 0 0,0 1,5V19A2,2 0 0,0 3,21H21A2,2 0 0,0 23,19V5A2,2 0 0,0 21,3Z"/>
-                            </svg>
-                            应用到所有组
-                        </button>
-                    </div>
-                    
-                    <div class="control-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="global-negative">
-                            <label for="global-negative">统一负片效果</label>
-                        </div>
-                        <button id="apply-global-negative" class="btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17,5V11H19V5H17M15,17H13V7H15V17M11,13H9V11H11V13M7,17H5V13H7V17M21,3H3A2,2 0 0,0 1,5V19A2,2 0 0,0 3,21H21A2,2 0 0,0 23,19V5A2,2 0 0,0 21,3Z"/>
-                            </svg>
-                            应用到所有组
-                        </button>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>统一背景颜色:</label>
-                        <div>
-                            <input type="radio" id="global-bg-white" name="global-bg-color" value="white" checked>
-                            <label for="global-bg-white">白色</label>
-                            
-                            <input type="radio" id="global-bg-black" name="global-bg-color" value="black">
-                            <label for="global-bg-black">黑色</label>
-                        </div>
-                        <button id="apply-global-bg" class="btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17,5V11H19V5H17M15,17H13V7H15V17M11,13H9V11H11V13M7,17H5V13H7V17M21,3H3A2,2 0 0,0 1,5V19A2,2 0 0,0 3,21H21A2,2 0 0,0 23,19V5A2,2 0 0,0 21,3Z"/>
-                            </svg>
-                            应用到所有组
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="groups-container">
-                    <!-- 分组将通过JS动态添加 -->
-                </div>
-                
-                <div style="text-align: center; margin-top: 1.5rem;">
-                    <button id="add-group" class="btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                        </svg>
-                        添加新组
-                    </button>
-                </div>
-                
-                <button id="process-all" class="btn btn-process">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12M18,12A6,6 0 0,0 12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12Z"/>
-                    </svg>
-                    一键处理所有图片组
-                </button>
-                
-                <div id="results-section" style="display: none;">
-                    <div class="control-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M14,13V9.5L19.5,4L20.92,5.41L16.5,9.82L16.5,13M14,17.5H2V15.5H14M2,11.5H9V9.5H2M2,5.5H9V3.5H2M21,6.5V13.5L17.5,17L14,13.5V6.5H21Z"/>
-                        </svg>
-                        处理结果
-                    </div>
-                    <div id="results-container" class="results-container">
-                        <!-- 结果将通过JS动态添加 -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <footer>
-            <p>© 2025 拼好图 | Powered by pinhaotu.app</p>
-            <p style="margin-top: 0.25rem;">所有操作均在本地进行，不收集任何用户数据。</p>
-        </footer>
-    </div>
+            <h1>拼好图 Pro</h1>
+        </header>
 
-    <div id="notification" class="notification">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
-        </svg>
-        <span id="notification-message">操作成功！</span>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path><path d="M12 2v2"></path><path d="M12 22v-2"></path><path d="m17 7 1.4-1.4"></path><path d="m6 18 1.4-1.4"></path><path d="M7 7l-1.4-1.4"></path><path d="m18 18-1.4-1.4"></path><path d="M2 12h2"></path><path d="M22 12h-2"></path></svg>
+                    全局设置
+                </h2>
+            </div>
+            <div class="control-grid">
+                <div class="control-group">
+                    <label for="global-threshold">背景剔除阈值: <span id="global-threshold-value">240</span></label>
+                    <input type="range" id="global-threshold" min="0" max="255" value="240">
+                </div>
+                <div class="control-group">
+                    <label>负片效果 (反相)</label>
+                    <div class="flex-center">
+                        <input type="checkbox" id="global-negative" class="toggle">
+                        <label for="global-negative">Toggle Negative</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="groups-container"></div>
+
+        <template id="group-template">
+            <div class="card group-card">
+                <div class="card-header">
+                    <h3 class="card-title group-title">图片组</h3>
+                     <button class="btn btn-danger btn-sm remove-group-btn">
+                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                         移除
+                     </button>
+                </div>
+                
+                <div class="file-drop-area">
+                    点击或拖拽图片到这里
+                    <input type="file" class="file-input" multiple accept="image/*" style="display: none;">
+                </div>
+                <div class="image-previews"></div>
+
+                <div class="card-header" style="margin-top: 1.5rem; margin-bottom: 0;">
+                    <div class="flex-center">
+                        <input type="checkbox" class="toggle use-local-settings">
+                        <label class="toggle-label"></label>
+                        <span style="margin-left: 0.5rem;">使用独立设置</span>
+                    </div>
+                </div>
+                
+                <div class="local-settings-container hidden">
+                    <div class="control-grid">
+                        <div class="control-group">
+                            <label class="local-threshold-label">局部阈值: <span>240</span></label>
+                            <input type="range" class="local-threshold" min="0" max="255" value="240">
+                        </div>
+                        <div class="control-group">
+                            <label>局部负片效果</label>
+                            <div class="flex-center">
+                                <input type="checkbox" class="toggle local-negative">
+                                <label class="local-negative-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <h4>处理结果:</h4>
+                    <span class="status-badge">未处理</span>
+                </div>
+                <canvas class="output-canvas"></canvas>
+            </div>
+        </template>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button class="btn btn-secondary" id="add-group-btn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                添加图片组
+            </button>
+            <button class="btn btn-primary" id="process-all-btn">
+                <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2L8 10l-8-2 8 2-2 8 2-8 2 8-2-8 8 2-8-2 2-8z" fill="url(#grad2)" stroke="none"/>
+                    <line x1="12" y1="22" x2="12" y2="10"></line>
+                </svg>
+                一键处理所有组
+            </button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let groups = [];
-            let groupCounter = 1;
-            
-            // 添加初始组
-            addNewGroup();
-            
-            // 添加新组按钮事件
-            document.getElementById('add-group').addEventListener('click', function() {
-                addNewGroup();
-                showNotification('已添加新图片组');
+        document.addEventListener('DOMContentLoaded', () => {
+            let imageGroups = [];
+            let nextGroupId = 0;
+
+            const globalThresholdSlider = document.getElementById('global-threshold');
+            const globalThresholdValue = document.getElementById('global-threshold-value');
+            const globalNegativeCheckbox = document.getElementById('global-negative');
+            const addGroupBtn = document.getElementById('add-group-btn');
+            const processAllBtn = document.getElementById('process-all-btn');
+            const groupsContainer = document.getElementById('groups-container');
+            const groupTemplate = document.getElementById('group-template');
+
+            // --- Global Settings Handlers ---
+            globalThresholdSlider.addEventListener('input', () => {
+                globalThresholdValue.textContent = globalThresholdSlider.value;
             });
-            
-            // 全局控制应用
-            document.getElementById('apply-global-threshold').addEventListener('click', function() {
-                const globalValue = document.getElementById('global-threshold').value;
-                document.querySelectorAll('.group-threshold').forEach(slider => {
-                    slider.value = globalValue;
-                    slider.nextElementSibling.textContent = globalValue;
-                });
-                showNotification('已应用统一阈值设置到所有组');
-            });
-            
-            document.getElementById('apply-global-negative').addEventListener('click', function() {
-                const isChecked = document.getElementById('global-negative').checked;
-                document.querySelectorAll('.group-negative').forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-                showNotification('已应用统一负片效果到所有组');
-            });
-            
-            document.getElementById('apply-global-bg').addEventListener('click', function() {
-                const bgValue = document.querySelector('input[name="global-bg-color"]:checked').value;
-                document.querySelectorAll('.group-bg-color').forEach(radio => {
-                    if (radio.value === bgValue) {
-                        radio.checked = true;
-                    }
-                });
-                showNotification('已应用统一背景颜色到所有组');
-            });
-            
-            // 全局阈值显示
-            document.getElementById('global-threshold').addEventListener('input', function() {
-                document.getElementById('global-threshold-value').textContent = this.value;
-            });
-            
-            // 处理所有组按钮事件
-            document.getElementById('process-all').addEventListener('click', processAllGroups);
-            
-            // 显示通知函数
-            function showNotification(message) {
-                const notification = document.getElementById('notification');
-                document.getElementById('notification-message').textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // 添加新组函数
-            function addNewGroup() {
-                const groupId = `group-${groupCounter}`;
-                groupCounter++;
-                
-                const groupElement = document.createElement('div');
-                groupElement.className = 'group-container';
-                groupElement.id = groupId;
-                
-                groupElement.innerHTML = `
-                    <div class="group-header">
-                        <div class="group-title">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14,13V9.5L19.5,4L20.92,5.41L16.5,9.82L16.5,13M14,17.5H2V15.5H14M2,11.5H9V9.5H2M2,5.5H9V3.5H2M21,6.5V13.5L17.5,17L14,13.5V6.5H21Z"/>
-                            </svg>
-                            图片组 ${groupCounter - 1}
-                        </div>
-                        <button class="remove-group" data-group="${groupId}">×</button>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>上传图片碎片 (可多选):</label>
-                        <div class="upload-area" id="upload-area-${groupCounter}">
-                            <p>点击或拖拽图片到此处上传</p>
-                            <p style="font-size: 0.9rem; color: var(--text-light);">支持多选</p>
-                            <input type="file" class="group-file-input" multiple style="display: none;">
-                        </div>
-                        <div class="image-preview-container" id="preview-${groupCounter}"></div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>阈值设置: <span class="range-value">240</span></label>
-                        <input type="range" class="group-threshold" min="0" max="255" value="240">
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>背景颜色:</label>
-                        <div>
-                            <input type="radio" class="group-bg-color" name="bg-color-${groupCounter}" value="white" checked>
-                            <label>白色</label>
-                            
-                            <input type="radio" class="group-bg-color" name="bg-color-${groupCounter}" value="black">
-                            <label>黑色</label>
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" class="group-negative" id="negative-${groupCounter}">
-                        <label for="negative-${groupCounter}">负片效果</label>
-                    </div>
-                `;
-                
-                document.getElementById('groups-container').appendChild(groupElement);
-                
-                // 设置新组的事件监听
-                const fileInput = groupElement.querySelector('.group-file-input');
-                const uploadArea = groupElement.querySelector('.upload-area');
-                const previewContainer = groupElement.querySelector('.image-preview-container');
-                
-                uploadArea.addEventListener('click', () => fileInput.click());
-                uploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--primary)';
-                    uploadArea.style.background = 'rgba(255, 112, 166, 0.1)';
-                });
-                uploadArea.addEventListener('dragleave', () => {
-                    uploadArea.style.borderColor = 'var(--secondary)';
-                    uploadArea.style.background = 'rgba(112, 214, 255, 0.05)';
-                });
-                uploadArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--secondary)';
-                    uploadArea.style.background = 'rgba(112, 214, 255, 0.05)';
-                    handleFiles(e.dataTransfer.files, previewContainer, groupCounter);
-                });
-                
-                fileInput.addEventListener('change', () => {
-                    handleFiles(fileInput.files, previewContainer, groupCounter);
-                });
-                
-                // 阈值滑块事件
-                const thresholdSlider = groupElement.querySelector('.group-threshold');
-                thresholdSlider.addEventListener('input', function() {
-                    this.nextElementSibling.textContent = this.value;
-                });
-                
-                // 删除组按钮事件
-                groupElement.querySelector('.remove-group').addEventListener('click', function() {
-                    if (document.querySelectorAll('.group-container').length > 1) {
-                        this.parentElement.parentElement.remove();
-                        showNotification('已删除图片组');
-                    } else {
-                        showNotification('至少需要保留一个图片组');
-                    }
-                });
-                
-                groups.push({
+
+            // --- Group Management ---
+            function addGroup() {
+                const groupId = nextGroupId++;
+                const newGroup = {
                     id: groupId,
-                    element: groupElement,
-                    images: [],
+                    files: [],
+                    useLocalSettings: false,
                     threshold: 240,
                     negative: false,
-                    bgColor: 'white'
+                };
+                imageGroups.push(newGroup);
+
+                const templateContent = groupTemplate.content.cloneNode(true);
+                const groupCard = templateContent.querySelector('.group-card');
+                groupCard.dataset.id = groupId;
+                
+                groupCard.querySelector('.group-title').textContent = `图片组 ${groupId + 1}`;
+                groupCard.querySelector('.use-local-settings').id = `use-local-settings-${groupId}`;
+                groupCard.querySelector('.toggle-label').htmlFor = `use-local-settings-${groupId}`;
+                groupCard.querySelector('.local-threshold').addEventListener('input', (e) => updateLocalSetting(groupId, 'threshold', e.target.value, e.target));
+                groupCard.querySelector('.local-negative').id = `local-negative-${groupId}`;
+                groupCard.querySelector('.local-negative-label').htmlFor = `local-negative-${groupId}`;
+                groupCard.querySelector('.local-negative').addEventListener('change', (e) => updateLocalSetting(groupId, 'negative', e.target.checked));
+                
+                groupsContainer.appendChild(templateContent);
+
+                const newCardElement = groupsContainer.querySelector(`[data-id='${groupId}']`);
+                setupGroupEventListeners(newCardElement, groupId);
+            }
+
+            function removeGroup(groupId) {
+                imageGroups = imageGroups.filter(g => g.id !== groupId);
+                const cardToRemove = groupsContainer.querySelector(`[data-id='${groupId}']`);
+                if (cardToRemove) {
+                    cardToRemove.remove();
+                }
+            }
+
+            function updateLocalSetting(groupId, key, value, element) {
+                const group = imageGroups.find(g => g.id === groupId);
+                if (group) {
+                    group[key] = value;
+                    if (key === 'threshold' && element) {
+                         element.previousElementSibling.querySelector('span').textContent = value;
+                    }
+                }
+            }
+
+            function setupGroupEventListeners(card, groupId) {
+                const fileDropArea = card.querySelector('.file-drop-area');
+                const fileInput = card.querySelector('.file-input');
+
+                fileDropArea.addEventListener('click', () => fileInput.click());
+                fileDropArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    fileDropArea.classList.add('dragover');
+                });
+                fileDropArea.addEventListener('dragleave', () => fileDropArea.classList.remove('dragover'));
+                fileDropArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    fileDropArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length) {
+                        handleFileSelect(groupId, files);
+                    }
+                });
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length) {
+                        handleFileSelect(groupId, e.target.files);
+                    }
+                });
+
+                card.querySelector('.remove-group-btn').addEventListener('click', () => removeGroup(groupId));
+                card.querySelector('.use-local-settings').addEventListener('change', (e) => {
+                    const group = imageGroups.find(g => g.id === groupId);
+                    if (group) {
+                        group.useLocalSettings = e.target.checked;
+                        card.querySelector('.local-settings-container').classList.toggle('hidden', !e.target.checked);
+                    }
                 });
             }
-            
-            // 处理上传的文件
-            function handleFiles(files, previewContainer, groupId) {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    if (!file.type.match('image.*')) continue;
-                    
+
+            function handleFileSelect(groupId, files) {
+                const group = imageGroups.find(g => g.id === groupId);
+                if (!group) return;
+                
+                group.files = Array.from(files);
+                const previewsContainer = groupsContainer.querySelector(`[data-id='${groupId}'] .image-previews`);
+                previewsContainer.innerHTML = '';
+                group.files.forEach(file => {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'image-preview floating';
-                        img.dataset.index = i;
-                        previewContainer.appendChild(img);
-                    };
+                    reader.onload = (e) => {
+                        previewsContainer.innerHTML += `
+                            <div class="preview-item">
+                                <img src="${e.target.result}" alt="${file.name}">
+                            </div>
+                        `;
+                    }
                     reader.readAsDataURL(file);
-                }
-                
-                if (files.length > 0) {
-                    showNotification(`已上传 ${files.length} 张图片`);
-                }
-            }
-            
-            // 拼图算法 - 基于边缘匹配
-            function jigsawSolver(images, threshold, negative, bgColor) {
-                return new Promise((resolve) => {
-                    // 模拟处理时间
-                    setTimeout(() => {
-                        // 创建画布
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        
-                        // 计算拼图尺寸
-                        const imgCount = images.length;
-                        const gridSize = Math.ceil(Math.sqrt(imgCount));
-                        
-                        // 假设每张图片尺寸相同，取第一张图片的尺寸
-                        const firstImg = new Image();
-                        firstImg.src = images[0].src;
-                        
-                        firstImg.onload = () => {
-                            const imgWidth = firstImg.width;
-                            const imgHeight = firstImg.height;
-                            
-                            // 设置画布尺寸
-                            canvas.width = imgWidth * gridSize;
-                            canvas.height = imgHeight * gridSize;
-                            
-                            // 设置背景
-                            ctx.fillStyle = bgColor === 'black' ? '#000000' : '#FFFFFF';
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            
-                            // 简单排序算法 - 按图片的"特征值"排序
-                            // 这里使用图片的平均亮度作为特征值
-                            const sortedImages = [...images].sort((a, b) => {
-                                // 创建临时canvas计算图片平均亮度
-                                const tempCanvas = document.createElement('canvas');
-                                const tempCtx = tempCanvas.getContext('2d');
-                                
-                                tempCanvas.width = a.width;
-                                tempCanvas.height = a.height;
-                                tempCtx.drawImage(a, 0, 0);
-                                
-                                const aData = tempCtx.getImageData(0, 0, a.width, a.height).data;
-                                let aBrightness = 0;
-                                for (let i = 0; i < aData.length; i += 4) {
-                                    aBrightness += (aData[i] + aData[i+1] + aData[i+2]) / 3;
-                                }
-                                aBrightness /= (aData.length / 4);
-                                
-                                tempCtx.clearRect(0, 0, a.width, a.height);
-                                tempCtx.drawImage(b, 0, 0);
-                                
-                                const bData = tempCtx.getImageData(0, 0, b.width, b.height).data;
-                                let bBrightness = 0;
-                                for (let i = 0; i < bData.length; i += 4) {
-                                    bBrightness += (bData[i] + bData[i+1] + bData[i+2]) / 3;
-                                }
-                                bBrightness /= (bData.length / 4);
-                                
-                                return aBrightness - bBrightness;
-                            });
-                            
-                            // 绘制拼图
-                            for (let i = 0; i < sortedImages.length; i++) {
-                                const row = Math.floor(i / gridSize);
-                                const col = i % gridSize;
-                                
-                                ctx.drawImage(
-                                    sortedImages[i],
-                                    col * imgWidth,
-                                    row * imgHeight,
-                                    imgWidth,
-                                    imgHeight
-                                );
-                            }
-                            
-                            // 应用阈值和负片效果
-                            if (threshold < 255 || negative) {
-                                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                const data = imageData.data;
-                                
-                                for (let i = 0; i < data.length; i += 4) {
-                                    // 应用阈值
-                                    if (threshold < 255) {
-                                        const brightness = (data[i] + data[i+1] + data[i+2]) / 3;
-                                        if (brightness > threshold) {
-                                            data[i] = 255;   // R
-                                            data[i+1] = 255; // G
-                                            data[i+2] = 255; // B
-                                        } else {
-                                            data[i] = 0;     // R
-                                            data[i+1] = 0;   // G
-                                            data[i+2] = 0;   // B
-                                        }
-                                    }
-                                    
-                                    // 应用负片效果
-                                    if (negative) {
-                                        data[i] = 255 - data[i];     // R
-                                        data[i+1] = 255 - data[i+1]; // G
-                                        data[i+2] = 255 - data[i+2]; // B
-                                    }
-                                }
-                                
-                                ctx.putImageData(imageData, 0, 0);
-                            }
-                            
-                            resolve(canvas.toDataURL('image/png'));
-                        };
-                    }, 1000); // 模拟处理时间
                 });
             }
-            
-            // 处理所有组
+
+            // --- Main Processing Logic ---
             async function processAllGroups() {
-                // 显示结果区域
-                document.getElementById('results-section').style.display = 'block';
-                
-                // 清空之前的结果
-                const resultsContainer = document.getElementById('results-container');
-                resultsContainer.innerHTML = '';
-                
-                // 获取所有组
-                const groupElements = document.querySelectorAll('.group-container');
-                
-                if (groupElements.length === 0) {
-                    showNotification('请先添加至少一个图片组');
-                    return;
-                }
-                
-                let hasImages = false;
-                const processBtn = document.getElementById('process-all');
-                const originalText = processBtn.innerHTML;
-                
-                // 禁用按钮并显示加载状态
-                processBtn.disabled = true;
-                processBtn.innerHTML = '<span class="loading"></span> 处理中...';
-                
-                for (let i = 0; i < groupElements.length; i++) {
-                    const groupElement = groupElements[i];
+                processAllBtn.disabled = true;
+                processAllBtn.textContent = '处理中...';
+
+                for (const group of imageGroups) {
+                    const card = groupsContainer.querySelector(`[data-id='${group.id}']`);
+                    const statusBadge = card.querySelector('.status-badge');
                     
-                    // 获取组设置
-                    const threshold = parseInt(groupElement.querySelector('.group-threshold').value);
-                    const negative = groupElement.querySelector('.group-negative').checked;
-                    const bgColor = groupElement.querySelector('.group-bg-color:checked').value;
-                    const imagePreviews = groupElement.querySelectorAll('.image-preview');
-                    
-                    if (imagePreviews.length === 0) {
-                        // 跳过没有图片的组
+                    if (group.files.length === 0) {
+                        statusBadge.textContent = '无图片';
                         continue;
                     }
-                    
-                    hasImages = true;
-                    
-                    // 创建结果卡片
-                    const resultCard = document.createElement('div');
-                    resultCard.className = 'result-card';
-                    resultCard.innerHTML = `
-                        <div class="result-image">
-                            <div style="text-align: center; padding: 20px;">
-                                <span class="loading"></span>
-                                <div>正在处理组 ${i + 1}...</div>
-                            </div>
-                        </div>
-                        <div class="result-info">
-                            <h3>组 ${i + 1} 处理中</h3>
-                            <p>请稍候...</p>
-                        </div>
-                    `;
-                    
-                    resultsContainer.appendChild(resultCard);
-                    
-                    // 加载所有图片
-                    const images = [];
-                    const loadPromises = [];
-                    
-                    for (let j = 0; j < imagePreviews.length; j++) {
-                        const img = new Image();
-                        img.src = imagePreviews[j].src;
-                        
-                        const loadPromise = new Promise((resolve) => {
-                            img.onload = () => resolve(img);
-                        });
-                        
-                        images.push(img);
-                        loadPromises.push(loadPromise);
-                    }
-                    
-                    // 等待所有图片加载完成
-                    await Promise.all(loadPromises);
-                    
-                    // 使用拼图算法处理图片
+
+                    statusBadge.textContent = '处理中...';
+                    statusBadge.classList.add('processing');
+
                     try {
-                        const resultImage = await jigsawSolver(images, threshold, negative, bgColor);
-                        
-                        // 更新结果卡片
-                        resultCard.innerHTML = `
-                            <img class="result-image" src="${resultImage}" alt="拼图结果">
-                            <div class="result-info">
-                                <h3>组 ${i + 1} 拼图成功！</h3>
-                                <p>共使用了 ${images.length} 张碎片图片</p>
-                                <p>阈值: ${threshold} | 负片: ${negative ? '是' : '否'} | 背景: ${bgColor}</p>
-                                <button class="btn download-btn" data-image="${resultImage}" data-filename="拼图结果-组${i+1}.png">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                    </svg>
-                                    下载图片
-                                </button>
-                            </div>
-                        `;
-                        
-                        // 添加下载事件
-                        resultCard.querySelector('.download-btn').addEventListener('click', function() {
-                            const link = document.createElement('a');
-                            link.href = this.dataset.image;
-                            link.download = this.dataset.filename;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            showNotification('图片下载成功！');
-                        });
-                        
+                        await processGroup(group);
+                        statusBadge.textContent = '处理完成';
+                        statusBadge.classList.remove('processing');
+                        statusBadge.classList.add('success');
                     } catch (error) {
-                        console.error('拼图处理失败:', error);
-                        resultCard.innerHTML = `
-                            <div class="result-image">
-                                <div style="text-align: center; padding: 20px;">
-                                    <svg width="60" height="60" viewBox="0 0 24 24" fill="#FF70A6">
-                                        <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/>
-                                    </svg>
-                                    <div>处理失败</div>
-                                </div>
-                            </div>
-                            <div class="result-info">
-                                <h3>组 ${i + 1} 处理失败</h3>
-                                <p>请检查图片格式或重试</p>
-                            </div>
-                        `;
+                        console.error(`处理组 ${group.id} 失败:`, error);
+                        statusBadge.textContent = '处理失败';
+                        statusBadge.classList.remove('processing');
+                        statusBadge.style.backgroundColor = 'var(--danger-color)';
                     }
                 }
                 
-                // 恢复按钮状态
-                processBtn.disabled = false;
-                processBtn.innerHTML = originalText;
+                processAllBtn.disabled = false;
+                processAllBtn.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f89b29;stop-opacity:1" /><stop offset="100%" style="stop-color:#ff5f6d;stop-opacity:1" /></linearGradient></defs>
+                        <path d="M12 2L8 10l-8-2 8 2-2 8 2-8 2 8-2-8 8 2-8-2 2-8z" fill="url(#grad2)" stroke="none"/><line x1="12" y1="22" x2="12" y2="10"></line>
+                    </svg>
+                    一键处理所有组
+                `;
+            }
+
+            async function processGroup(group) {
+                const settings = {
+                    threshold: group.useLocalSettings ? parseInt(group.threshold) : parseInt(globalThresholdSlider.value),
+                    negative: group.useLocalSettings ? group.negative : globalNegativeCheckbox.checked,
+                };
                 
-                if (!hasImages) {
-                    showNotification('请至少在一组中上传图片');
-                    resultsContainer.innerHTML = '';
-                    return;
+                const card = groupsContainer.querySelector(`[data-id='${group.id}']`);
+                const outputCanvas = card.querySelector('.output-canvas');
+                const ctx = outputCanvas.getContext('2d');
+
+                const imageBitmaps = await Promise.all(group.files.map(file => createImageBitmap(file)));
+
+                if (imageBitmaps.length === 0) return;
+
+                const maxWidth = Math.max(...imageBitmaps.map(b => b.width));
+                const maxHeight = Math.max(...imageBitmaps.map(b => b.height));
+
+                outputCanvas.width = maxWidth;
+                outputCanvas.height = maxHeight;
+                ctx.clearRect(0, 0, maxWidth, maxHeight);
+
+                // Create a single offscreen canvas for processing
+                const offscreenCanvas = new OffscreenCanvas(maxWidth, maxHeight);
+                const offscreenCtx = offscreenCanvas.getContext('2d');
+                
+                let compositeImageData = ctx.createImageData(maxWidth, maxHeight);
+
+                for (const bitmap of imageBitmaps) {
+                    offscreenCtx.clearRect(0, 0, maxWidth, maxHeight);
+                    offscreenCtx.drawImage(bitmap, 0, 0);
+                    const imageData = offscreenCtx.getImageData(0, 0, bitmap.width, bitmap.height);
+                    const pixels = imageData.data;
+
+                    for (let i = 0; i < pixels.length; i += 4) {
+                        const r = pixels[i];
+                        const g = pixels[i + 1];
+                        const b = pixels[i + 2];
+                        
+                        // If pixel is not transparent background, merge it.
+                        if (r < settings.threshold || g < settings.threshold || b < settings.threshold) {
+                             // Only write pixel if destination is transparent
+                            if (compositeImageData.data[i + 3] === 0) {
+                                if(settings.negative) {
+                                    compositeImageData.data[i] = 255 - r;
+                                    compositeImageData.data[i + 1] = 255 - g;
+                                    compositeImageData.data[i + 2] = 255 - b;
+                                } else {
+                                    compositeImageData.data[i] = r;
+                                    compositeImageData.data[i + 1] = g;
+                                    compositeImageData.data[i + 2] = b;
+                                }
+                                compositeImageData.data[i + 3] = 255;
+                            }
+                        }
+                    }
                 }
                 
-                // 显示成功消息
-                showNotification('拼图处理完成！');
-                
-                // 滚动到结果区域
-                document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+                ctx.putImageData(compositeImageData, 0, 0);
             }
+            
+            // --- Initial State ---
+            addGroupBtn.addEventListener('click', addGroup);
+            processAllBtn.addEventListener('click', processAllGroups);
+            addGroup(); // Start with one group
         });
     </script>
 </body>
-    </html>
+</html>
